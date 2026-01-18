@@ -193,4 +193,69 @@ const questions=[
 ];
 
 let step=0;
-const q=document.getElementById("
+const q=document.getElementById("question");
+q.innerText=questions[0];
+
+const $=id=>document.getElementById(id);
+const neutral=$("neutral"), sad=$("sad"), love=$("love"),
+friend=$("friend"), officer=$("officer"), fence=$("fence");
+
+function hideAll(){
+ document.querySelectorAll(".character")
+ .forEach(e=>e.classList.remove("show","left-friend","left-officer","right"));
+}
+
+function resetStory(){
+ step=0;
+ q.innerText=questions[0];
+ hideAll();
+ neutral.classList.add("show");
+ document.querySelector(".buttons").style.display="block";
+ document.getElementById("final").style.display="none";
+ moveNo();
+}
+
+/* NO BUTTON MOVE (ONLY FIRST QUESTION) */
+const noBtn=document.getElementById("noBtn");
+function moveNo(){
+ if(step!==0) return;
+ noBtn.style.left=Math.random()*(window.innerWidth-120)+"px";
+ noBtn.style.top=Math.random()*(window.innerHeight-120)+"px";
+}
+noBtn.addEventListener("mouseenter",moveNo);
+noBtn.addEventListener("touchstart",moveNo);
+
+/* YES */
+yesBtn.onclick=()=>{
+ if(step===0){
+   hideAll();
+   fence.classList.add("show");
+ }
+ step++;
+ if(step<questions.length){
+   q.innerText=questions[step];
+ } else {
+   hideAll();
+   fence.classList.remove("show");
+   love.classList.add("show","right");
+   document.querySelector(".buttons").style.display="none";
+   document.getElementById("final").style.display="block";
+ }
+};
+
+/* NO → BUSTED */
+noBtn.onclick=()=>{
+ if(step===0) return;
+ hideAll();
+ fence.classList.remove("show");
+ friend.classList.add("show","left-friend");
+ officer.classList.add("show","left-officer");
+ sad.classList.add("show");
+ setTimeout(resetStory,1800);
+};
+
+moveNo();
+</script>
+
+</body>
+</html>
