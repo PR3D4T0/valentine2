@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Valentine 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 💖 FONT -->
+<style>
+@font-face {
+  font-family: 'HeartEverything';
+  src: url('TheHeartOfEverythingDemo-KRdD.ttf') format('truetype');
+}
+</style>
+
+<style>
+:root {
+  --pink:#ff5c8a;
+  --deep:#c7004c;
+}
+
+body {
+  margin:0;
+  min-height:100vh;
+  background:linear-gradient(#ffe6ee,#ffd1dc);
+  font-family:'HeartEverything', cursive;
+  overflow:hidden;
+  text-align:center;
+}
+
+/* 🎵 AUDIO */
+audio { display:none }
+
+/* 💬 QUESTION */
+h1 {
+  margin-top:4vh;
+  font-size:clamp(28px,7vw,46px);
+  color:var(--deep);
+  text-shadow:0 0 18px rgba(255,92,138,.35);
+  padding:0 12px;
+}
+
+/* ❤️ BUTTONS */
+.buttons {
+  margin-top:5vh;
+}
+
+.heart-btn {
+  width:110px;
+  height:110px;
+  border-radius:50%;
+  font-size:22px;
+  border:none;
+  cursor:pointer;
+  margin:0 6vw;
+  font-family:'HeartEverything', cursive;
+  transition:transform .25s ease;
+}
+
+#yesBtn {
+  background:var(--pink);
+  color:white;
+  box-shadow:0 0 20px rgba(255,92,138,.6);
+}
+
+#noBtn {
+  background:white;
+  color:var(--deep);
+  border:2px solid var(--pink);
+  position:fixed;
+}
+
+.heart-btn:hover { transform:scale(1.08); }
+
+/* 🎭 STAGE */
+#stage {
+  position:relative;
+  height:55vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.character {
+  position:absolute;
+  width:clamp(160px,38vw,260px);
+  opacity:0;
+  transform:translateY(20px);
+  transition:opacity .6s ease, transform .6s ease;
+}
+
+.show {
+  opacity:1;
+  transform:translateY(0);
+}
+
+.love-glow {
+  filter:drop-shadow(0 0 25px rgba(255,92,138,.7));
+}
+
+/* Fence centered */
+#fence {
+  width:clamp(220px,55vw,420px);
+}
+
+/* 🎯 LEFT SIDE SPLIT */
+.left-friend {
+  transform:translateX(-42vw);
+}
+.left-officer {
+  transform:translateX(-24vw);
+}
+
+/* RIGHT SIDE */
+.right {
+  transform:translateX(35vw);
+}
+
+/* 🌸 HEART PARTICLES */
+.heart {
+  position:fixed;
+  bottom:-20px;
+  font-size:18px;
+  animation:floatUp linear forwards;
+  pointer-events:none;
+}
+
+@keyframes floatUp {
+  from { transform:translateY(0); opacity:0 }
+  to { transform:translateY(-120vh); opacity:0 }
+}
+
+#final {
+  display:none;
+  font-size:clamp(34px,8vw,56px);
+  color:var(--deep);
+  margin-top:6vh;
+}
+</style>
+</head>
+
+<body>
+
+<h1 id="question"></h1>
+
+<div id="stage">
+  <img id="neutral" class="character show" src="character_neutral.png">
+  <img id="sad" class="character" src="character_sad.png">
+  <img id="love" class="character love-glow" src="character_love.png">
+
+  <!-- 👥 FIXED SIDE-BY-SIDE -->
+  <img id="friend" class="character left-friend" src="friend.png">
+  <img id="officer" class="character left-officer" src="officer.png">
+
+  <img id="fence" class="character" src="fence.jpg">
+</div>
+
+<div class="buttons">
+  <button id="yesBtn" class="heart-btn">YES</button>
+  <button id="noBtn" class="heart-btn">NO</button>
+</div>
+
+<div id="final">Happy Valentine’s Day 💖</div>
+
+<audio id="bgMusic" src="love-466198.mp3" autoplay loop></audio>
+
+<script>
+const music=document.getElementById("bgMusic");
+music.volume=0.4;
+document.addEventListener("click",()=>music.play(),{once:true});
+document.addEventListener("touchstart",()=>music.play(),{once:true});
+
+/* 🌸 HEARTS */
+setInterval(()=>{
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerHTML="❤️";
+  h.style.left=Math.random()*100+"vw";
+  h.style.animationDuration=(5+Math.random()*3)+"s";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),8000);
+},500);
+
+/* STORY */
+const questions=[
+ "Do you like surprises? 💕",
+ "Do you believe in love? 💖",
+ "Do you trust me? 💗",
+ "Can I ask you something special? 💞",
+ "Will you be my Valentine? ❤️"
+];
+
+let step=0;
+const q=document.getElementById("question");
+q.innerText=questions[0];
+
+const $=id=>document.getElementById(id);
+const neutral=$("neutral"),sad=$("sad"),love=$("love"),
+friend=$("friend"),officer=$("officer"),fence=$("fence");
+
+function hideAll(){
+ document.querySelectorAll(".character")
+ .forEach(e=>e.classList.remove("show","left-friend","left-officer","right"));
+}
+
+function resetStory(){
+ step=0;
+ q.innerText=questions[0];
+ hideAll();
+ neutral.classList.add("show");
+ document.querySelector(".buttons").style.display="block";
+ document.getElementById("final").style.display="none";
+ moveNo();
+}
+
+/* NO BUTTON MOVE (Q1 ONLY) */
+const noBtn=document.getElementById("noBtn");
+function moveNo(){
+ if(step!==0) return;
+ noBtn.style.left=Math.random()*(window.innerWidth-120)+"px";
+ noBtn.style.top=Math.random()*(window.innerHeight-120)+"px";
+}
+noBtn.addEventListener("mouseenter",moveNo);
+noBtn.addEventListener("touchstart",moveNo);
+
+/* YES */
+yesBtn.onclick=()=>{
+ if(step===0){
+   hideAll();
+   fence.classList.add("show");
+ }
+ step++;
+ if(step<questions.length){
+   q.innerText=questions[step];
+ } else {
+   hideAll();
+   fence.classList.remove("show");
+   love.classList.add("show","right");
+   document.querySelector(".buttons").style.display="none";
+   document.getElementById("final").style.display="block";
+ }
+};
+
+/* NO (BUSTED) */
+noBtn.onclick=()=>{
+ if(step===0) return;
+ hideAll();
+ fence.classList.remove("show");
+ friend.classList.add("show","left-friend");
+ officer.classList.add("show","left-officer");
+ sad.classList.add("show");
+ setTimeout(resetStory,1800);
+};
+
+moveNo();
+</script>
+
+</body>
+</html>
+
