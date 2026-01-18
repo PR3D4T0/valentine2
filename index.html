@@ -103,10 +103,11 @@ h1 {
   width:clamp(220px,55vw,420px);
 }
 
-/* 🎯 LEFT SIDE SPLIT */
+/* 👥 LEFT SIDE (SIDE BY SIDE) */
 .left-friend {
   transform:translateX(-42vw);
 }
+
 .left-officer {
   transform:translateX(-24vw);
 }
@@ -148,11 +149,12 @@ h1 {
   <img id="sad" class="character" src="character_sad.png">
   <img id="love" class="character love-glow" src="character_love.png">
 
-  <!-- 👥 FIXED SIDE-BY-SIDE -->
+  <!-- 👥 FRIEND & OFFICER -->
   <img id="friend" class="character left-friend" src="friend.png">
   <img id="officer" class="character left-officer" src="officer.png">
 
-  <img id="fence" class="character" src="fence.jpg">
+  <!-- 🧱 FIXED: PNG -->
+  <img id="fence" class="character" src="fence.png">
 </div>
 
 <div class="buttons">
@@ -165,8 +167,8 @@ h1 {
 <audio id="bgMusic" src="love-466198.mp3" autoplay loop></audio>
 
 <script>
-const music=document.getElementById("bgMusic");
-music.volume=0.4;
+const music = document.getElementById("bgMusic");
+music.volume = 0.4;
 document.addEventListener("click",()=>music.play(),{once:true});
 document.addEventListener("touchstart",()=>music.play(),{once:true});
 
@@ -191,70 +193,4 @@ const questions=[
 ];
 
 let step=0;
-const q=document.getElementById("question");
-q.innerText=questions[0];
-
-const $=id=>document.getElementById(id);
-const neutral=$("neutral"),sad=$("sad"),love=$("love"),
-friend=$("friend"),officer=$("officer"),fence=$("fence");
-
-function hideAll(){
- document.querySelectorAll(".character")
- .forEach(e=>e.classList.remove("show","left-friend","left-officer","right"));
-}
-
-function resetStory(){
- step=0;
- q.innerText=questions[0];
- hideAll();
- neutral.classList.add("show");
- document.querySelector(".buttons").style.display="block";
- document.getElementById("final").style.display="none";
- moveNo();
-}
-
-/* NO BUTTON MOVE (Q1 ONLY) */
-const noBtn=document.getElementById("noBtn");
-function moveNo(){
- if(step!==0) return;
- noBtn.style.left=Math.random()*(window.innerWidth-120)+"px";
- noBtn.style.top=Math.random()*(window.innerHeight-120)+"px";
-}
-noBtn.addEventListener("mouseenter",moveNo);
-noBtn.addEventListener("touchstart",moveNo);
-
-/* YES */
-yesBtn.onclick=()=>{
- if(step===0){
-   hideAll();
-   fence.classList.add("show");
- }
- step++;
- if(step<questions.length){
-   q.innerText=questions[step];
- } else {
-   hideAll();
-   fence.classList.remove("show");
-   love.classList.add("show","right");
-   document.querySelector(".buttons").style.display="none";
-   document.getElementById("final").style.display="block";
- }
-};
-
-/* NO (BUSTED) */
-noBtn.onclick=()=>{
- if(step===0) return;
- hideAll();
- fence.classList.remove("show");
- friend.classList.add("show","left-friend");
- officer.classList.add("show","left-officer");
- sad.classList.add("show");
- setTimeout(resetStory,1800);
-};
-
-moveNo();
-</script>
-
-</body>
-</html>
-
+const q=document.getElementById("
